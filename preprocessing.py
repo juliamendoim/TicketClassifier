@@ -17,7 +17,7 @@ corpus = [nlp(utterance) for utterance in raw]  # spacy object
 
 # lematize, remove stopwords and punctuation
 
-lemmas = ' '.join([y.lemma_ for x in corpus for y in x if y.is_stop is False and y.lemma_.lower() not in stopWords] )
+lemmas = ' '.join([y.lemma_ for x in corpus for y in x if y.is_stop is False and y.lemma_.lower() not in stopWords])
 
 # save clean corpus
 
