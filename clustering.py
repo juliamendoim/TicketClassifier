@@ -12,48 +12,38 @@ import pandas as pd
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def argparser():
-    parser = argparse.ArgumentParser(description='Clustering')
-    parser.add_argument('*spacy_model', type=str, help='Language: de')
-    parser.add_argument('*nltk_stopwords', type=str, help='Stopwords: german')
-    parser.add_argument('*n_clusters', type=int, help='Number of clusters')
-    parser.add_argument('*input_file', type=str, help='input raw file with \\n sentence separation')
+parser = argparse.ArgumentParser(description='Clustering')
+parser.add_argument('spacy_model', type=str, help='Language: de')
+parser.add_argument('nltk_stopwords', type=str, help='Stopwords: german')
+parser.add_argument('n_clusters', type=int, help='Number of clusters')
+parser.add_argument('input_file', type=str, help='input raw file with \\n sentence separation')
 
-    args = parser.parse_args()
+args = parser.parse_args()
 
-    if not args:
-        parser.print_usage()
-        sys.exit(1)
+if not args:
+    parser.print_usage()
+    sys.exit(1)
+
+nlp = spacy.load(args.spacy_model)
+
+stopWords = set(stopwords.words(args.nltk_stopwords))
+
+raw_text = args.input_file
+
+with open(raw_text, 'r', encoding='utf-8') as f:
+    text = f.readlines()
+
+clean_corpus = preprocessor(text, nlp, stopWords)
+
+
+tfidfvect = TfidfVectorizer()
+agglomerative = AgglomerativeClustering(n_clusters=args.n_clusters, affinity='euclidean', linkage='ward')
+
+tfidfmatrix = tfidfvect.fit_transform(clean_corpus)
+
+aggclusters = agglomerative.fit(tfidfmatrix.toarray())
+
+print(pd.DataFrame(aggclusters.labels_, clean_corpus))
 
 
 
-def cluster(spacy_model,nltk_stopwords,n_clusters,input_file):
-    nlp = spacy.load(spacy_model)
-
-    stopWords = set(stopwords.words(nltk_stopwords))
-
-    raw_text = input_file
-
-    with open(raw_text, 'r', encoding='utf-8') as f:
-        text = f.readlines()
-
-    clean_corpus = preprocessor(text, nlp, stopWords)
-
-    tfidfvect = TfidfVectorizer()
-    agglomerative = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
-
-    tfidfmatrix = tfidfvect.fit_transform(clean_corpus)
-
-    aggclusters = agglomerative.fit(tfidfmatrix.toarray())
-
-    df = pd.DataFrame(aggclusters.labels_, clean_corpus)
-
-    return df
-
-def main():
-    args = argparser()
-    clustering = cluster(args.spacy_model,args.nltk_stopwords,args.n_clusters,args.input_file)
-    return clustering
-
-if __name__ == "__main__":
-    main()
