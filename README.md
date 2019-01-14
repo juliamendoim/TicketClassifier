@@ -4,18 +4,21 @@ An unsupervised model for text classification of short sentences
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+pip install **requirements.txt**
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+- Python3.6
 
 
-### Installing
+### Running
 
-A step by step series of examples that tell you how to get a development env running
+- python clustering.py spacy_model nltk_stopwords n_clusters raw_input 
 
-Say what the step will be
+or
+
+- python clustering.py -h 
+
 
 ## Built With
 
