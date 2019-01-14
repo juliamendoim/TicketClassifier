@@ -44,6 +44,3 @@ tfidfmatrix = tfidfvect.fit_transform(clean_corpus)
 aggclusters = agglomerative.fit(tfidfmatrix.toarray())
 
 print(pd.DataFrame(aggclusters.labels_, clean_corpus))
-
-
-
