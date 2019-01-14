@@ -1,48 +1,34 @@
-from collections import defaultdict
-
-from nltk.corpus import stopwords
-import spacy
+#  -*- coding: utf-8 -*-
 
 
-nlp = spacy.load('de')
+def preprocessor(text, nlp, stopWords):
 
-stopWords = set(stopwords.words('german'))
+    corpus = [nlp(utterance) for utterance in text]
 
-with open('corpus/unclustered_input.txt', 'r', encoding='utf-8') as f:
-    raw = f.readlines()
+    lemmas = [y.lemma_ for x in corpus for y in x if y.is_stop is False and y.is_punct is False and y.lemma_.lower() not in stopWords]
+    lematized_text = ' '.join(lemmas).split('\n')
+    print(lematized_text)
 
-# create a spacy object
+    original_tokens = [y.text for x in corpus for y in x]
 
-corpus = [nlp(utterance) for utterance in raw]  # spacy object
+    print('There where ' + str(len(original_tokens)) + ' tokens in original corpus')
+    print('There are ' + str(len(lemmas)) + ' tokens in clean corpus')
 
-# lematize, remove stopwords and punctuation
+    original_vocabulary = set(original_tokens)
+    vocabulary = set(lemmas)
 
-lemmas = ' '.join([y.lemma_ for x in corpus for y in x if y.is_stop is False and y.lemma_.lower() not in stopWords])
+    print('There where ' + str(len(original_vocabulary)) + ' unique words in original corpus')
+    print('There are ' + str(len(vocabulary)) + ' unique lemmas in clean corpus')
 
-# save clean corpus
+    # frequency dict
 
-with open('clean/lemmas_corpus.txt', 'w', encoding='utf-8') as f:
-    f.write(lemmas)
+    from collections import defaultdict
 
-# tokens and vocabulary
+    frequency_dict = defaultdict(int)
 
-original_tokens = [y.text for x in corpus for y in x]
-tokens = [y.lemma_ for x in corpus for y in x if y.is_stop is False and y.lemma_.lower() not in stopWords]
+    for token in lemmas:
+        frequency_dict[token] += 1
 
-print('There where ' + str(len(original_tokens)) + ' tokens in original corpus')
-print('There are ' + str(len(tokens)) + ' tokens in clean corpus')
+    print('Frecuency dictionary ', frequency_dict)
 
-original_vocabulary = set(original_tokens)
-vocabulary = set(tokens)
-
-print('There where ' + str(len(original_vocabulary)) + ' unique words in original corpus')
-print('There are ' + str(len(vocabulary)) + ' unique lemmas in clean corpus')
-
-# frequency dict
-
-frequency_dict = defaultdict(int)
-
-for token in tokens:
-    frequency_dict[token] += 1
-
-print('Frecuency dictionary ', frequency_dict)
+    return lematized_text
