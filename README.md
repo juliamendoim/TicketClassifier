@@ -6,6 +6,16 @@ An unsupervised model for text classification of short sentences
 
 pip install **requirements.txt**
 
+for the spacy_model:
+
+- python -m spacy download de
+
+for the nltk_stopwords, from a python console:
+
+- import nltk
+- nltk.download('stopwords')
+
+
 ### Prerequisites
 
 - Python3.6
