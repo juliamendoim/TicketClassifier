@@ -4,7 +4,7 @@ An unsupervised model for text classification of short sentences
 
 ## Getting Started
 
-pip install **requirements.txt**
+pip install -r **requirements.txt**
 
 for the spacy_model:
 
@@ -23,9 +23,9 @@ for the nltk_stopwords, from a python console:
 
 ### Running
 
-- python clustering.py spacy_model nltk_stopwords n_clusters raw_input 
+- python clustering.py *spacy_model* *nltk_stopwords* *n_clusters* *raw_input* 
 
-or
+or help:
 
 - python clustering.py -h 
 
